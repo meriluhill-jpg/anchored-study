@@ -11,13 +11,16 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #1a1410; font-family: Georgia, 'Times New Roman', serif; color: #e8ddd0; }
     button { font-family: Georgia, 'Times New Roman', serif; cursor: pointer; }
-    ::-webkit-scrollbar { display: none; }
+    textarea { font-family: Georgia, 'Times New Roman', serif; resize: vertical; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #1a1410; }
+    ::-webkit-scrollbar-thumb { background: #3a2d20; border-radius: 2px; }
   </style>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState } = React;
+    const { useState, useEffect } = React;
 
     const study = [
       {
@@ -26,28 +29,75 @@
         theme: "Understanding the Spiral",
         color: "#7C4A3E",
         icon: "🌀",
-        intro: "Before we can fight something, we need to understand it. Emotional eating isn't a character flaw — it's a coping mechanism that found you before you had better tools. This week we're not fixing anything. We're just getting honest.",
-        scriptures: [
+        days: [
           {
-            ref: "Romans 7:15, 19",
-            text: "I do not understand what I do. For what I want to do I do not do, but what I hate I do... For I do not do the good I want to do, but the evil I do not want to do — this I keep on doing.",
-            note: "Paul — the apostle — wrote this. You are not alone in this cycle."
+            day: 1,
+            label: "Read & Receive",
+            focus: "Opening your heart",
+            content: "Before we can fight something, we need to understand it. Emotional eating isn't a character flaw — it's a coping mechanism that found you before you had better tools. This week we're not fixing anything. We're just getting honest.",
+            scripture: { ref: "Romans 7:15, 19", text: "I do not understand what I do. For what I want to do I do not do, but what I hate I do... For I do not do the good I want to do, but the evil I do not want to do — this I keep on doing." },
+            note: "Paul — the apostle — wrote this. You are not alone in this cycle.",
+            task: "Read the verse slowly twice. Sit with it for 2 minutes. Just let it be true without trying to fix it."
           },
           {
-            ref: "Psalm 139:23-24",
-            text: "Search me, God, and know my heart; test me and know my anxious thoughts. See if there is any offensive way in me, and lead me in the way everlasting.",
-            note: "Awareness is the first act of surrender."
+            day: 2,
+            label: "Go Deeper",
+            focus: "The second scripture",
+            content: "Awareness is the first act of surrender. Before we can change, we have to let God see us — really see us. Not the version we present at church, but the one who ate the whole plate and then felt shame. That version is exactly who He's searching for.",
+            scripture: { ref: "Psalm 139:23-24", text: "Search me, God, and know my heart; test me and know my anxious thoughts. See if there is any offensive way in me, and lead me in the way everlasting." },
+            note: "This is an invitation, not a confession. You're asking God to show you what He already sees.",
+            task: "Pray this verse word for word as your prayer today. Then sit quietly for 3 minutes and just listen."
+          },
+          {
+            day: 3,
+            label: "Look Inward",
+            focus: "Questions 1 & 2",
+            content: "Today we start getting specific. The goal isn't to feel guilty — it's to get curious. Think of yourself as a detective, not a defendant.",
+            questions: [
+              "When you reached for food in a spiral, what were you actually feeling? (Stress? Loneliness? Shame? Boredom? Reward?) Try to name the emotion underneath.",
+              "What was happening in the 24 hours before a recent spiral began? What was the trigger?"
+            ]
+          },
+          {
+            day: 4,
+            label: "Go Deeper",
+            focus: "Questions 3 & 4",
+            content: "Food does something for us in those moments — and being honest about what that is isn't shameful. It's the beginning of finding something better.",
+            questions: [
+              "What does food do for you emotionally in that moment — comfort, control, numbing, pleasure? There's no wrong answer.",
+              "When you were done eating, what emotions followed? What did you tell yourself?"
+            ]
+          },
+          {
+            day: 5,
+            label: "The Hard One",
+            focus: "Question 5",
+            content: "This question matters more than it seems. What happens to our relationship with God in the middle of a spiral says a lot about where we are.",
+            questions: [
+              "Have you ever talked to God in the middle of a spiral — while it's happening? If not, what stops you?"
+            ]
+          },
+          {
+            day: 6,
+            label: "Practice",
+            focus: "This week's exercise",
+            content: "Faith without action is just ideas. This practice is simple but surprisingly powerful if you actually do it.",
+            task: "Start a 'trigger log' today. Every time you feel the urge to eat emotionally this week, write down: What happened? What am I feeling? You're not trying to stop anything yet — just observe. Awareness before action.",
+            questions: [
+              "What did you notice today when you paid attention? Even if you didn't spiral, what emotions came up around food?"
+            ]
+          },
+          {
+            day: 7,
+            label: "Pray & Rest",
+            focus: "Weekly prayer & reflection",
+            content: "End the week the same way you started — with God. Let this prayer be yours.",
+            prayer: "God, I don't fully understand my own patterns. But You do. Search me — not to condemn me, but to heal me. Show me what I'm really hungry for. I'm tired of the spiral. I'm showing up. Amen.",
+            questions: [
+              "Looking back at this week, what's one thing God showed you about yourself? It doesn't have to be big."
+            ]
           }
-        ],
-        questions: [
-          "When you reached for food in a spiral, what were you actually feeling? (Stress? Loneliness? Shame? Boredom? Reward?) Try to name the emotion underneath.",
-          "What was happening in the 24 hours before the spiral began? What was the trigger?",
-          "What does food do for you emotionally in that moment — comfort, control, numbing, pleasure? There's no wrong answer.",
-          "When you were done, what emotions followed? What did you tell yourself?",
-          "Have you ever talked to God in the middle of a spiral? If not, what stops you?"
-        ],
-        prayer: "God, I don't fully understand my own patterns. But You do. Search me — not to condemn me, but to heal me. Show me what I'm really hungry for. I'm tired of the spiral. I'm showing up. Amen.",
-        practice: "This week, keep a simple 'trigger log.' Every time you feel the urge to eat emotionally, write down: What happened? What am I feeling? You're not trying to stop anything yet — just observe. Awareness before action."
+        ]
       },
       {
         week: 2,
@@ -55,33 +105,75 @@
         theme: "Your Body Is Not the Enemy",
         color: "#4A6741",
         icon: "🌿",
-        intro: "A lot of us were taught that the body is something to fight against, discipline into submission, or be ashamed of. Scripture tells a different story. God made your body, called it good, and chose to live in it. That changes things.",
-        scriptures: [
+        days: [
           {
-            ref: "1 Corinthians 6:19-20",
-            text: "Do you not know that your bodies are temples of the Holy Spirit, who is in you, whom you have received from God? You are not your own; you were bought at a price. Therefore honor God with your bodies.",
-            note: "This verse is often weaponized for shame. Read it again slowly — it is actually about dignity, not condemnation."
+            day: 1,
+            label: "Read & Receive",
+            focus: "Opening your heart",
+            content: "A lot of us were taught that the body is something to fight against, discipline into submission, or be ashamed of. Scripture tells a different story. God made your body, called it good, and chose to live in it. That changes things.",
+            scripture: { ref: "1 Corinthians 6:19-20", text: "Do you not know that your bodies are temples of the Holy Spirit, who is in you, whom you have received from God? You are not your own; you were bought at a price. Therefore honor God with your bodies." },
+            note: "This verse is often used as a weapon for shame. Read it again slowly — it's actually about dignity.",
+            task: "Read the verse three times. The first time for information. The second time for conviction. The third time as a gift."
           },
           {
-            ref: "Genesis 2:7",
-            text: "Then the Lord God formed a man from the dust of the ground and breathed into his nostrils the breath of life, and the man became a living being.",
-            note: "God got His hands dirty making you. This body is not an accident."
+            day: 2,
+            label: "Go Deeper",
+            focus: "Creation & pleasure",
+            content: "God got His hands in the dirt to make you. He invented taste buds, hunger, satisfaction. Food was His idea. The problem was never food — it's what we're trying to do with it.",
+            scripture: { ref: "Genesis 2:7 & Psalm 34:8", text: "Then the Lord God formed a man from the dust of the ground and breathed into his nostrils the breath of life... Taste and see that the Lord is good." },
+            note: "Both creation and pleasure are in God's design. You are not a mistake and neither is your appetite.",
+            task: "Eat one thing today slowly and intentionally, with gratitude. No guilt, no counting. Just one mindful moment."
           },
           {
-            ref: "Psalm 34:8",
-            text: "Taste and see that the Lord is good.",
-            note: "God invented pleasure — food was His idea. The issue isn't food itself."
+            day: 3,
+            label: "Look Inward",
+            focus: "Questions 1 & 2",
+            content: "Before we can move toward something better, we have to be honest about where we are.",
+            questions: [
+              "How do you feel about your body right now? Be honest — not what you think you should feel, but what you actually feel.",
+              "Did you grow up with shame around food or your body? How might that still be affecting you today?"
+            ]
+          },
+          {
+            day: 4,
+            label: "Go Deeper",
+            focus: "Questions 3 & 4",
+            content: "Treating your body differently doesn't require perfection — just a small shift in how you see it.",
+            questions: [
+              "What would it look like to treat your body as something God lives in — not perfectly, but differently than you do now?",
+              "What's one physical thing your body does well that you could be genuinely grateful for today?"
+            ]
+          },
+          {
+            day: 5,
+            label: "The Hard One",
+            focus: "Question 5",
+            content: "Our beliefs about God's feelings toward us shape everything else. This one is worth sitting with.",
+            questions: [
+              "Do you believe God is disappointed in you because of food and your body? What does that belief do to you — and is it actually true?"
+            ]
+          },
+          {
+            day: 6,
+            label: "Practice",
+            focus: "The pause",
+            content: "This simple practice, repeated consistently, rewires the pattern over time.",
+            task: "Before eating anything today — even once — pause for 30 seconds and ask: 'Am I physically hungry or emotionally hungry?' You don't have to stop yourself. Just ask. Practice the pause.",
+            questions: [
+              "What did you notice when you paused today? What were you actually feeling?"
+            ]
+          },
+          {
+            day: 7,
+            label: "Pray & Rest",
+            focus: "Weekly prayer & reflection",
+            content: "Let this prayer close the week.",
+            prayer: "Lord, I've been at war with this body for a long time. I don't always treat it like You live here. Help me see myself the way You do — not with condemnation, but with the eyes of a Creator who is still working. My body is not the enemy. Help me believe that. Amen.",
+            questions: [
+              "What shifted for you this week, even just a little? What do you want to carry into next week?"
+            ]
           }
-        ],
-        questions: [
-          "How do you feel about your body right now? Be honest — not what you think you should feel, but what you actually feel.",
-          "Did you grow up with shame around food or your body? How might that still be affecting you?",
-          "What would it look like to treat your body as something God lives in — not perfectly, but differently than you do now?",
-          "What's one physical thing your body does well that you could be grateful for today?",
-          "Do you think God is disappointed in you about food? What does that belief do to you?"
-        ],
-        prayer: "Lord, I've been at war with this body for a long time. I don't always treat it like You live here. Help me see myself the way You do — not with condemnation, but with the eyes of a Creator who is still working. My body is not the enemy. Help me believe that. Amen.",
-        practice: "Before eating anything this week — even once — pause for 30 seconds and ask: 'Am I physically hungry or emotionally hungry?' You don't have to stop yourself. Just ask. Practice the pause."
+        ]
       },
       {
         week: 3,
@@ -89,33 +181,75 @@
         theme: "The Fruit That Grows, Not the Muscle You Flex",
         color: "#3D5A80",
         icon: "🍇",
-        intro: "Here's where most diet culture and even church culture gets it wrong: we treat self-control like something you summon by gritting your teeth harder. But scripture puts self-control in a very different category — it's a fruit. Fruit doesn't grunt and strain. It grows from the right root.",
-        scriptures: [
+        days: [
           {
-            ref: "Galatians 5:22-23",
-            text: "But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control. Against such things there is no law.",
-            note: "Self-control is last on this list — and it grows from the same root as love, joy, and peace. You can't white-knuckle your way to it."
+            day: 1,
+            label: "Read & Receive",
+            focus: "The fruit of the Spirit",
+            content: "Here's where most diet culture and even church culture gets it wrong: we treat self-control like something you summon by gritting your teeth harder. But scripture puts self-control in a very different category — it's a fruit. Fruit doesn't grunt and strain. It grows from the right root.",
+            scripture: { ref: "Galatians 5:22-23", text: "But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control. Against such things there is no law." },
+            note: "Self-control is last on this list — and it grows from the same root as love, joy, and peace. You can't white-knuckle your way to it.",
+            task: "Write out all nine fruits. Circle the ones you feel most disconnected from right now. Notice if they're connected."
           },
           {
-            ref: "Galatians 5:16",
-            text: "So I say, walk by the Spirit, and you will not gratify the desires of the flesh.",
-            note: "The solution isn't more willpower. It's more Spirit. The strategy is walking, not winning."
+            day: 2,
+            label: "Go Deeper",
+            focus: "Walking vs. fighting",
+            content: "The strategy isn't winning — it's walking. There's a big difference. Fighting means strain, force, and eventual exhaustion. Walking means a daily rhythm, a direction, a relationship.",
+            scripture: { ref: "Galatians 5:16", text: "So I say, walk by the Spirit, and you will not gratify the desires of the flesh." },
+            note: "The solution isn't more willpower. It's more Spirit. Walk — don't fight.",
+            task: "What does 'walking by the Spirit' look like in your actual day — practically, not just spiritually? Think about morning, afternoon, evening."
           },
           {
-            ref: "2 Peter 1:5-6",
-            text: "For this very reason, make every effort to add to your faith goodness; and to goodness, knowledge; and to knowledge, self-control.",
-            note: "Self-control is built on a foundation — it comes after faith, goodness, and knowledge, not before them."
+            day: 3,
+            label: "The Foundation",
+            focus: "What self-control is built on",
+            content: "Self-control doesn't come first. It comes after faith, goodness, and knowledge are already in place. You can't build the roof before the foundation.",
+            scripture: { ref: "2 Peter 1:5-6", text: "For this very reason, make every effort to add to your faith goodness; and to goodness, knowledge; and to knowledge, self-control." },
+            note: "Self-control is built on a foundation — it comes after faith, goodness, and knowledge, not before them.",
+            task: "Where are you in this sequence? Be honest about which foundation stones feel solid and which feel shaky."
+          },
+          {
+            day: 4,
+            label: "Look Inward",
+            focus: "Questions 1 & 2",
+            content: "Honesty here is the beginning of real change.",
+            questions: [
+              "Have you been trying to fix this with willpower alone? How has that worked for you long-term?",
+              "What would it look like to approach your eating not as a discipline problem but as a spiritual growth issue?"
+            ]
+          },
+          {
+            day: 5,
+            label: "The Hard One",
+            focus: "Questions 3 & 4",
+            content: "Connection — or the lack of it — shows up everywhere.",
+            questions: [
+              "Which fruits of the Spirit (love, peace, patience, gentleness) feel most absent in your life right now? Do you see a connection to the food struggle?",
+              "If self-control grows from connection with God rather than from strain — how would you describe your current connection honestly?"
+            ]
+          },
+          {
+            day: 6,
+            label: "Practice",
+            focus: "5 minutes of stillness",
+            content: "This one is simple but it's the whole game.",
+            task: "Spend 5 minutes each morning this week sitting quietly before the day starts. No agenda, no long prayer list — just: 'I need You today.' That's it. Notice over the week if it changes anything.",
+            questions: [
+              "How did the 5 minutes go today? What came up — restlessness, peace, distraction, something else?"
+            ]
+          },
+          {
+            day: 7,
+            label: "Pray & Rest",
+            focus: "Weekly prayer & reflection",
+            content: "Close this week by asking for the real thing.",
+            prayer: "Holy Spirit, I've been trying to do this in my own strength and I keep failing. I don't need more willpower — I need more of You. Grow this fruit in me. Teach me what it means to walk instead of fight. I want the real thing. Amen.",
+            questions: [
+              "What's the most important thing you're taking from this week?"
+            ]
           }
-        ],
-        questions: [
-          "Have you been trying to fix this with willpower alone? How has that been working?",
-          "What would it look like to approach your eating not as a discipline problem but as a spiritual growth issue?",
-          "Which other fruits of the Spirit (love, peace, patience, gentleness) do you feel most disconnected from right now? Is there a connection?",
-          "What does 'walking by the Spirit' look like in a practical, daily way for you — not just spiritually but physically?",
-          "If self-control grows from connection with God, not strain — what does your current connection look like?"
-        ],
-        prayer: "Holy Spirit, I've been trying to do this in my own strength and I keep failing. I don't need more willpower — I need more of You. Grow this fruit in me. Teach me what it means to walk instead of fight. I want the real thing. Amen.",
-        practice: "Spend 5 minutes each morning this week just sitting quietly and asking the Spirit to lead you that day. No agenda, no long prayer — just 'I need You today.' Notice if and how it changes the day."
+        ]
       },
       {
         week: 4,
@@ -123,33 +257,75 @@
         theme: "Identifying Your Emotional Triggers",
         color: "#6B4E71",
         icon: "🔍",
-        intro: "Emotional eating rarely happens in a vacuum. It's triggered — by stress, loneliness, conflict, shame, boredom, the feeling of being out of control in some other area of life. This week we get specific. You can't heal what you won't name.",
-        scriptures: [
+        days: [
           {
-            ref: "Proverbs 4:23",
-            text: "Above all else, guard your heart, for everything you do flows from it.",
-            note: "Your heart — your emotional inner world — is the source. Guarding it starts with knowing what's in it."
+            day: 1,
+            label: "Read & Receive",
+            focus: "Guarding your heart",
+            content: "Emotional eating rarely happens in a vacuum. It's triggered — by stress, loneliness, conflict, shame, boredom, the feeling of being out of control somewhere else in life. This week we get specific. You can't heal what you won't name.",
+            scripture: { ref: "Proverbs 4:23", text: "Above all else, guard your heart, for everything you do flows from it." },
+            note: "Guarding your heart starts with knowing what's in it — not hiding from it.",
+            task: "Ask yourself honestly today: what's been living in my heart this week? What emotions have I been carrying that I haven't named?"
           },
           {
-            ref: "Romans 12:2",
-            text: "Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God's will is.",
-            note: "Patterns — including thought patterns — can be renewed. But first you have to see the pattern."
+            day: 2,
+            label: "Go Deeper",
+            focus: "Renewing the pattern",
+            content: "Patterns can be changed — but only after you see them. You have to name the pattern before you can renew it.",
+            scripture: { ref: "Romans 12:2", text: "Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God's will is." },
+            note: "Transformation starts in the mind, not the kitchen.",
+            task: "Write down your eating pattern from the past week — not to judge it, just to see it clearly."
           },
           {
-            ref: "John 8:32",
-            text: "Then you will know the truth, and the truth will set you free.",
-            note: "Freedom starts with truth, including the truth about yourself."
+            day: 3,
+            label: "Truth & Freedom",
+            focus: "The promise",
+            content: "Freedom starts with truth — including the truth about yourself. This isn't easy, but it's the door.",
+            scripture: { ref: "John 8:32", text: "Then you will know the truth, and the truth will set you free." },
+            note: "He didn't say the truth would feel good. He said it would set you free.",
+            task: "What's one truth about your emotional eating that you've been avoiding looking at directly? Write it down today."
+          },
+          {
+            day: 4,
+            label: "Look Inward",
+            focus: "Finding the pattern",
+            content: "Go back to your trigger log. Let's start seeing what's really there.",
+            questions: [
+              "Looking back at your trigger log or your memory — what patterns do you see? What emotions show up most before a spiral?",
+              "Is there a specific time of day, situation, or person that tends to come before emotional eating for you?"
+            ]
+          },
+          {
+            day: 5,
+            label: "The Hard One",
+            focus: "What are you really hungry for?",
+            content: "This is the question under all the other questions.",
+            questions: [
+              "What need is food meeting in those moments? (Comfort? Control? Escape? Numbing?) What would actually meet that need?",
+              "Is there something you've been avoiding thinking or feeling? What are you running from?"
+            ]
+          },
+          {
+            day: 6,
+            label: "Practice",
+            focus: "The trigger map",
+            content: "Getting concrete is the step most people skip. Don't skip it.",
+            task: "Write out your top 3 emotional triggers. For each one complete this sentence: 'When I feel _______, I want to reach for food because _______. What I actually need is _______.' Be as honest as you can.",
+            questions: [
+              "What surprised you when you wrote out your trigger map? What did you discover?"
+            ]
+          },
+          {
+            day: 7,
+            label: "Pray & Rest",
+            focus: "Weekly prayer & reflection",
+            content: "You did something hard this week. Let God meet you in it.",
+            prayer: "God, I want to stop running. Show me what I'm really feeling beneath the hunger. Give me the courage to sit with it instead of medicate it. Renew my mind — not just my habits. The truth will set me free. Help me believe that. Amen.",
+            questions: [
+              "What is God showing you about yourself through this week? What do you want to do with that?"
+            ]
           }
-        ],
-        questions: [
-          "Look back at your trigger log from Week 1. What patterns do you see? What emotions show up most before a spiral?",
-          "Is there a specific time of day, situation, or person that tends to precede emotional eating for you?",
-          "What need is food meeting in those moments? (Comfort? Control? Escape? Numbing?) What would actually meet that need?",
-          "Is there something you've been avoiding thinking or feeling? What are you running from?",
-          "What would you tell a close friend who shared this same struggle with you?"
-        ],
-        prayer: "God, I want to stop running. Show me what I'm really feeling beneath the hunger. Give me the courage to sit with it instead of medicate it. Renew my mind — not just my habits. The truth will set me free. Help me believe that. Amen.",
-        practice: "Write out your top 3 emotional triggers. For each one, write: 'When I feel _______, I want to reach for food because _______. What I actually need is _______.' Be as honest as you can. This is between you and God."
+        ]
       },
       {
         week: 5,
@@ -157,33 +333,75 @@
         theme: "Practical & Spiritual Strategies That Actually Work",
         color: "#8B6914",
         icon: "🚪",
-        intro: "God promises a way out. But the way out isn't usually magic — it's a habit, a pause, a person, a practice. This week is practical. We're building a real plan because faith without action isn't faith. It's wishful thinking.",
-        scriptures: [
+        days: [
           {
-            ref: "1 Corinthians 10:13",
-            text: "No temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear. But when you are tempted, he will also provide a way out so that you can endure it.",
-            note: "The way of escape is real. But you have to look for it — it's not always obvious."
+            day: 1,
+            label: "Read & Receive",
+            focus: "God's promise",
+            content: "God promises a way out. But the way out isn't usually magic — it's a habit, a pause, a person, a practice. This week is practical. We're building a real plan.",
+            scripture: { ref: "1 Corinthians 10:13", text: "No temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear. But when you are tempted, he will also provide a way out so that you can endure it." },
+            note: "The way of escape is real. But you have to look for it — it's not always obvious.",
+            task: "Think back to the last time you spiraled. Was there a moment where you could have turned? What was it? You had more choice than you realized."
           },
           {
-            ref: "Isaiah 58:11",
-            text: "The Lord will guide you always; he will satisfy your needs in a sun-scorched land and will strengthen your frame. You will be like a well-watered garden.",
-            note: "Satisfaction from God is the alternative to feeding every emotion with food."
+            day: 2,
+            label: "Go Deeper",
+            focus: "Real satisfaction",
+            content: "The alternative to emotional eating isn't deprivation — it's real nourishment. God wants to satisfy you. That's not a metaphor to rush past.",
+            scripture: { ref: "Isaiah 58:11", text: "The Lord will guide you always; he will satisfy your needs in a sun-scorched land and will strengthen your frame. You will be like a well-watered garden." },
+            note: "A well-watered garden, not a wilting one. That's the vision.",
+            task: "What does being 'well-watered' feel like to you — emotionally, spiritually? When did you last feel that way?"
           },
           {
-            ref: "Philippians 4:11-12",
-            text: "I have learned, in whatsoever state I am, therewith to be content. I know both how to be abased, and I know how to abound... I have learned the secret of being content.",
-            note: "Contentment is learned — it doesn't come automatically. Paul had to practice it."
+            day: 3,
+            label: "Learning Contentment",
+            focus: "It's a practice, not a gift",
+            content: "Paul said he learned contentment — past tense, through experience. It wasn't given to him. He practiced it in good times and bad until it stuck.",
+            scripture: { ref: "Philippians 4:11-12", text: "I have learned, in whatsoever state I am, therewith to be content. I know both how to be abased, and I know how to abound... I have learned the secret of being content." },
+            note: "Contentment is practiced, not inherited. You can learn it too.",
+            task: "Name one area of your life right now where you are practicing contentment — even imperfectly. Acknowledge that work."
+          },
+          {
+            day: 4,
+            label: "Look Inward",
+            focus: "Building the escape plan",
+            content: "Getting specific turns intention into action.",
+            questions: [
+              "When the spiral starts, what are three concrete things you could do in that moment instead of reaching for food? (Call someone? Pray out loud? Go outside? Journal? Walk around the block?)",
+              "Who is one person in your life you could text in a moment of temptation — someone who genuinely won't judge you?"
+            ]
+          },
+          {
+            day: 5,
+            label: "The Hard One",
+            focus: "Making it real",
+            content: "Realistic beats perfect every single time.",
+            questions: [
+              "What's one small, doable food-related boundary that feels like help, not punishment? Something you could actually keep.",
+              "What would you do with the time and energy you spend in shame spirals after eating, if that time was freed up?"
+            ]
+          },
+          {
+            day: 6,
+            label: "Practice",
+            focus: "Your Escape Plan",
+            content: "Write it down. Having a plan before the moment comes changes everything.",
+            task: "Create your Escape Plan — a list of 5 specific things you will do when the urge to spiral hits. Write it on your phone or on paper. Post it where you'll see it. This is your covenant with yourself and God.",
+            questions: [
+              "What's on your escape plan? Write it out here too."
+            ]
+          },
+          {
+            day: 7,
+            label: "Pray & Rest",
+            focus: "Weekly prayer & reflection",
+            content: "You built something real this week.",
+            prayer: "Father, thank You that You always provide a way out. Help me see it. Help me choose it even when my emotions are screaming. Give me the wisdom to build habits that help, not hurt. I want to be a well-watered garden, not a desert. Teach me the secret of contentment. Amen.",
+            questions: [
+              "How do you feel going into next week, now that you have an actual plan?"
+            ]
           }
-        ],
-        questions: [
-          "When the spiral starts, what are three things you could do in that moment instead of reaching for food? (Call someone? Pray out loud? Go outside? Journal?)",
-          "Who is one person in your life you could text in a moment of temptation — someone who won't judge you?",
-          "What's one small food-related boundary that feels doable (not punishing)? Something realistic.",
-          "What does 'the way of escape' look like in your specific situation? Get concrete.",
-          "What would you do with the time and energy you spend in shame spirals after eating, if that time was freed up?"
-        ],
-        prayer: "Father, thank You that You always provide a way out. Help me see it. Help me choose it even when my emotions are screaming. Give me the wisdom to build habits that help, not hurt. I want to be a well-watered garden, not a desert. Teach me the secret of contentment. Amen.",
-        practice: "Create your 'Escape Plan' — a physical list (on your phone or paper) of 5 specific things you'll do when the urge to spiral hits. Post it somewhere visible. This is your covenant with yourself and God. The goal isn't perfection — it's giving yourself a real option when emotions surge."
+        ]
       },
       {
         week: 6,
@@ -191,38 +409,75 @@
         theme: "Grace, Shame, and Getting Back Up",
         color: "#9E5A3A",
         icon: "🌅",
-        intro: "You will stumble again. That is not defeat — that is being human. The question isn't whether you'll fall, it's what you do next. Shame keeps you on the ground. Grace gets you back up. This is the week where we handle the morning after.",
-        scriptures: [
+        days: [
           {
-            ref: "Micah 7:8",
-            text: "Do not gloat over me, my enemy! Though I have fallen, I will rise. Though I sit in darkness, the Lord will be my light.",
-            note: "Falling is part of the story — rising is the point."
+            day: 1,
+            label: "Read & Receive",
+            focus: "Falling is not the end",
+            content: "You will stumble again. That is not defeat — that is being human. The question isn't whether you'll fall, it's what you do next. Shame keeps you on the ground. Grace gets you back up.",
+            scripture: { ref: "Micah 7:8", text: "Do not gloat over me, my enemy! Though I have fallen, I will rise. Though I sit in darkness, the Lord will be my light." },
+            note: "Falling is part of the story — rising is the point.",
+            task: "Think about the last time you fell and stayed down in shame instead of rising. What kept you there? What would rising have looked like?"
           },
           {
-            ref: "Romans 8:1",
-            text: "Therefore, there is now no condemnation for those who are in Christ Jesus.",
-            note: "This verse is not a license to be careless. It is armor against the shame spiral that makes everything worse."
+            day: 2,
+            label: "No Condemnation",
+            focus: "Armor against shame",
+            content: "This verse is not a license to be careless. It is armor. When the enemy uses your failures to convince you that you're beyond help, this is your weapon.",
+            scripture: { ref: "Romans 8:1", text: "Therefore, there is now no condemnation for those who are in Christ Jesus." },
+            note: "No condemnation. Not 'less condemnation.' Not 'condemnation after a waiting period.' None.",
+            task: "Say this verse out loud three times today. Once in the morning, once in the afternoon, once before bed."
           },
           {
-            ref: "Lamentations 3:22-23",
-            text: "Because of the Lord's great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness.",
-            note: "New every morning. Not new every perfect morning — every morning."
+            day: 3,
+            label: "New Every Morning",
+            focus: "Lamentations & Proverbs",
+            content: "Two promises that don't get old.",
+            scripture: { ref: "Lamentations 3:22-23 & Proverbs 24:16", text: "Because of the Lord's great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness... For though the righteous fall seven times, they rise again." },
+            note: "Righteousness isn't defined by not falling. It's defined by rising.",
+            task: "Write 'New Every Morning' somewhere you'll see it tomorrow when you wake up."
           },
           {
-            ref: "Proverbs 24:16",
-            text: "For though the righteous fall seven times, they rise again, but the wicked stumble when calamity strikes.",
-            note: "Righteousness isn't defined by not falling. It's defined by rising."
+            day: 4,
+            label: "Look Inward",
+            focus: "Your voice after a fall",
+            content: "The voice in your head after a spiral matters enormously.",
+            questions: [
+              "What does your inner voice actually say after a spiral? Write down the real words. Now ask: does that sound like God or like the enemy?",
+              "What's the difference between godly sorrow (which leads to change) and shame (which leads to more spiraling)? Where do you usually end up?"
+            ]
+          },
+          {
+            day: 5,
+            label: "The Hard One",
+            focus: "Coming back",
+            content: "How we return to God after failure might be the most important habit in this whole study.",
+            questions: [
+              "How quickly do you tend to return to God after a failure? What makes it hard to go back?",
+              "What would it look like to end a spiral with prayer instead of shame? What would you actually say to God in that moment?"
+            ]
+          },
+          {
+            day: 6,
+            label: "Practice",
+            focus: "The grace letter",
+            content: "This practice has changed people. Give it the time it deserves.",
+            task: "Write yourself a 'grace letter' — write what you believe God would say to you the morning after a fall. Not sugarcoating the behavior, but speaking truth about who you are and whose you are. Keep it. Read it when you need it.",
+            questions: [
+              "What did God say to you in your grace letter? You can write it out here."
+            ]
+          },
+          {
+            day: 7,
+            label: "Pray & Rest",
+            focus: "Weekly prayer & reflection",
+            content: "You are not defined by your worst moments.",
+            prayer: "Lord, I fell again. And I'm not going to let shame convince me to stay down. Your mercies are new this morning — I'm claiming that. I'm not defined by yesterday's spiral. I'm defined by whose I am. Help me rise. Not in my strength — in Yours. Amen.",
+            questions: [
+              "What's one thing you want to remember from this week when the next fall comes?"
+            ]
           }
-        ],
-        questions: [
-          "What does your inner voice sound like after a spiral? Write down the actual words. Now ask: does that sound like God or like the enemy?",
-          "What's the difference between godly sorrow (which leads to change) and shame (which leads to more spiraling)? Where do you usually land?",
-          "How quickly do you tend to return to God after a failure? What makes it hard to go back?",
-          "What would it look like to end a spiral with prayer instead of shame? What would you actually say to God?",
-          "Is there someone in your life you could share this struggle with — not for accountability pressure, but for the relief of being known?"
-        ],
-        prayer: "Lord, I fell again. And I'm not going to let shame convince me to stay down. Your mercies are new this morning — I'm claiming that. I'm not defined by yesterday's spiral. I'm defined by whose I am. Help me rise. Not in my strength — in Yours. Amen.",
-        practice: "Write yourself a 'grace letter' — what would God say to you the morning after a fall? Not sugarcoating the behavior, but speaking truth about who you are and who He is. Keep it. Read it when you need it."
+        ]
       },
       {
         week: 7,
@@ -230,226 +485,258 @@
         theme: "Learning to Be Nourished — Spirit, Soul, and Body",
         color: "#3D6B5A",
         icon: "✨",
-        intro: "This final week isn't a finish line — it's a vision. What does a life look like where you're genuinely nourished? Where food is enjoyed without guilt, emotions are felt without panic, and the Spirit fills what nothing else can? You're not there yet. But you're heading there.",
-        scriptures: [
+        days: [
           {
-            ref: "John 6:35",
-            text: "Then Jesus declared, 'I am the bread of life. Whoever comes to me will never go hungry, and whoever believes in me will never be thirsty.'",
-            note: "The deepest hunger is spiritual. Jesus offers to meet it."
+            day: 1,
+            label: "Read & Receive",
+            focus: "The Bread of Life",
+            content: "This final week isn't a finish line — it's a vision. What does a life look like where you're genuinely nourished? Where food is enjoyed without guilt, emotions are felt without panic, and the Spirit fills what nothing else can?",
+            scripture: { ref: "John 6:35", text: "Then Jesus declared, 'I am the bread of life. Whoever comes to me will never go hungry, and whoever believes in me will never be thirsty.'" },
+            note: "The deepest hunger is spiritual. Jesus offers to meet it.",
+            task: "Sit with this question today: what am I actually most hungry for right now — and have I been looking for it in the right place?"
           },
           {
-            ref: "Psalm 107:9",
-            text: "For he satisfies the thirsty and fills the hungry with good things.",
-            note: "God is in the business of satisfying. You were made to be full."
+            day: 2,
+            label: "Go Deeper",
+            focus: "God satisfies",
+            content: "God is in the business of satisfying. Not just tolerating your hunger — actually filling it. That's His character.",
+            scripture: { ref: "Psalm 107:9", text: "For he satisfies the thirsty and fills the hungry with good things." },
+            note: "You were made to be full. Not just okay — full.",
+            task: "What good things has God filled your life with that you sometimes overlook? Make a list of at least five today."
           },
           {
-            ref: "3 John 1:2",
-            text: "Dear friend, I pray that you may enjoy good health and that all may go well with you, even as your soul is getting along well.",
-            note: "Whole health — body, soul, and spirit — is God's desire for you."
+            day: 3,
+            label: "Whole Health",
+            focus: "Body, soul, spirit",
+            content: "God's desire for you is wholeness — not just spiritual improvement. He cares about your physical health, your emotional wellbeing, and your spirit all together.",
+            scripture: { ref: "3 John 1:2 & Isaiah 55:1-2", text: "Dear friend, I pray that you may enjoy good health and that all may go well with you, even as your soul is getting along well... Come, all you who are thirsty, come to the waters... Why spend money on what is not bread, and your labor on what does not satisfy?" },
+            note: "God's diagnosis: you've been spending hunger on things that don't satisfy. There's something better.",
+            task: "What is one thing you could do this week for your whole health — body, soul, and spirit together?"
           },
           {
-            ref: "Isaiah 55:1-2",
-            text: "Come, all you who are thirsty, come to the waters... Why spend money on what is not bread, and your labor on what does not satisfy? Listen, listen to me, and eat what is good, and you will delight in the richest of fare.",
-            note: "God's diagnosis: you've been spending hunger on things that don't satisfy. There's something better."
+            day: 4,
+            label: "Look Inward",
+            focus: "What satisfied looks like",
+            content: "Cast the vision. You can't aim for something you haven't imagined.",
+            questions: [
+              "What does 'satisfied' look like for you — not just with food, but in life? What are you actually longing for at the deepest level?",
+              "Over these 7 weeks, what is the most important thing God has shown you about yourself?"
+            ]
+          },
+          {
+            day: 5,
+            label: "Looking Forward",
+            focus: "Carrying it forward",
+            content: "The work doesn't stop at week 7 — but you're building something real.",
+            questions: [
+              "What one practice from these seven weeks do you want to carry forward permanently?",
+              "What does a healthy relationship with food — not perfect, but peaceful — look like for you practically?"
+            ]
+          },
+          {
+            day: 6,
+            label: "Practice",
+            focus: "The Freedom Vision",
+            content: "Vision is a spiritual practice. Where there is no vision, the people perish.",
+            task: "Write your 'Freedom Vision' — one paragraph describing what this area of your life looks like in one year if you keep doing the work. Not perfect — free. Read it every Sunday morning for the next month.",
+            questions: [
+              "Write your Freedom Vision here. What does one year from now look like?"
+            ]
+          },
+          {
+            day: 7,
+            label: "Pray & Rest",
+            focus: "Final prayer & celebration",
+            content: "You showed up. Seven weeks. That matters. Finish well.",
+            prayer: "Jesus, You are the bread of life. When I've been reaching for food to cope, I've often been reaching for something You were always offering. Teach me to come to You first — when I'm stressed, lonely, overwhelmed, or just bored. Fill me with good things. Let me be genuinely satisfied. I'm not done yet — but I'm not where I was. Thank You. Amen.",
+            questions: [
+              "Who or what are you becoming through this process? Write a short reflection on where you started and where you are now."
+            ]
           }
-        ],
-        questions: [
-          "What does 'satisfied' look like for you — not just with food, but in life? What are you actually longing for?",
-          "Over these 7 weeks, what has God shown you about yourself? What has shifted?",
-          "What one practice from these weeks do you want to carry forward permanently?",
-          "What does a healthy relationship with food — not perfection, but peace — look like for you in practical terms?",
-          "Who or what are you becoming through this process? Write a short vision of the version of yourself that walks in freedom in this area."
-        ],
-        prayer: "Jesus, You are the bread of life. When I've been reaching for food to cope, I've often been reaching for something You were always offering. Teach me to come to You first — when I'm stressed, lonely, overwhelmed, or just bored. Fill me with good things. Let me be genuinely satisfied. I'm not done yet — but I'm not where I was. Thank You. Amen.",
-        practice: "Write your 'Freedom Vision' — one paragraph describing what this area of your life looks like in one year if you keep doing the work. Not perfect — free. Read it every Sunday morning for the next month."
+        ]
       }
     ];
 
     function BibleStudy() {
       const [activeWeek, setActiveWeek] = useState(0);
-      const [expandedSection, setExpandedSection] = useState(null);
-      const [completedWeeks, setCompletedWeeks] = useState([]);
+      const [activeDay, setActiveDay] = useState(0);
+      const [answers, setAnswers] = useState(() => {
+        try { return JSON.parse(localStorage.getItem("anchored_answers") || "{}"); } catch { return {}; }
+      });
+      const [completedDays, setCompletedDays] = useState(() => {
+        try { return JSON.parse(localStorage.getItem("anchored_completed") || "[]"); } catch { return []; }
+      });
 
       const week = study[activeWeek];
+      const day = week.days[activeDay];
+      const dayKey = `w${activeWeek}d${activeDay}`;
 
-      const toggleSection = (section) => {
-        setExpandedSection(expandedSection === section ? null : section);
+      const saveAnswer = (qIdx, val) => {
+        const key = `${dayKey}_q${qIdx}`;
+        const updated = { ...answers, [key]: val };
+        setAnswers(updated);
+        localStorage.setItem("anchored_answers", JSON.stringify(updated));
       };
 
-      const markComplete = () => {
-        if (!completedWeeks.includes(activeWeek)) {
-          setCompletedWeeks([...completedWeeks, activeWeek]);
+      const getAnswer = (qIdx) => answers[`${dayKey}_q${qIdx}`] || "";
+
+      const markDayComplete = () => {
+        const key = dayKey;
+        if (!completedDays.includes(key)) {
+          const updated = [...completedDays, key];
+          setCompletedDays(updated);
+          localStorage.setItem("anchored_completed", JSON.stringify(updated));
         }
-        if (activeWeek < study.length - 1) {
+        if (activeDay < week.days.length - 1) {
+          setActiveDay(activeDay + 1);
+          window.scrollTo(0, 0);
+        } else if (activeWeek < study.length - 1) {
           setActiveWeek(activeWeek + 1);
-          setExpandedSection(null);
+          setActiveDay(0);
           window.scrollTo(0, 0);
         }
       };
 
-      const SectionBtn = ({ id, emoji, label }) => (
-        <button
-          onClick={() => toggleSection(id)}
-          style={{
-            width: "100%",
-            background: expandedSection === id ? "#2a2018" : "#211810",
-            border: `1px solid ${expandedSection === id ? week.color + "88" : "#3a2d20"}`,
-            borderRadius: expandedSection === id ? "10px 10px 0 0" : "10px",
-            padding: "14px 16px",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            color: "#e8ddd0",
-            marginBottom: expandedSection === id ? 0 : 0,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 18 }}>{emoji}</span>
-            <span style={{ fontSize: 16 }}>{label}</span>
-          </div>
-          <span style={{ fontSize: 20, color: "#6a5a48", lineHeight: 1 }}>{expandedSection === id ? "−" : "+"}</span>
-        </button>
-      );
+      const isDayComplete = (w, d) => completedDays.includes(`w${w}d${d}`);
+      const weeksCompleted = study.filter((_, wi) => study[wi].days.every((_, di) => isDayComplete(wi, di))).length;
+      const totalDays = study.reduce((a, w) => a + w.days.length, 0);
+      const completedCount = completedDays.length;
 
       return (
         <div style={{ minHeight: "100vh", background: "#1a1410" }}>
           {/* Header */}
-          <div style={{
-            background: "linear-gradient(135deg, #2a1f14 0%, #1a1410 100%)",
-            borderBottom: "1px solid #3a2d20",
-            padding: "28px 20px 20px",
-            textAlign: "center",
-          }}>
-            <div style={{ fontSize: 11, letterSpacing: "0.25em", color: "#a08060", textTransform: "uppercase", marginBottom: 8 }}>
-              A 7-Week Bible Study
-            </div>
-            <h1 style={{ fontSize: 26, fontWeight: "normal", color: "#f0e4d0", margin: "0 0 6px", lineHeight: 1.2 }}>
-              Anchored in the Storm
-            </h1>
-            <div style={{ fontSize: 14, color: "#9a8060", fontStyle: "italic" }}>
-              Self-Control, Emotions &amp; Food
+          <div style={{ background: "linear-gradient(135deg, #2a1f14, #1a1410)", borderBottom: "1px solid #3a2d20", padding: "24px 20px 18px", textAlign: "center" }}>
+            <div style={{ fontSize: 10, letterSpacing: "0.3em", color: "#a08060", textTransform: "uppercase", marginBottom: 6 }}>A 7-Week Bible Study</div>
+            <h1 style={{ fontSize: 24, fontWeight: "normal", color: "#f0e4d0", margin: "0 0 4px" }}>Anchored in the Storm</h1>
+            <div style={{ fontSize: 13, color: "#9a8060", fontStyle: "italic" }}>Self-Control, Emotions &amp; Food</div>
+            <div style={{ marginTop: 12, fontSize: 12, color: "#6a5a48" }}>{completedCount} of {totalDays} days complete</div>
+            <div style={{ background: "#2a2018", borderRadius: 3, height: 3, margin: "6px auto 0", maxWidth: 200, overflow: "hidden" }}>
+              <div style={{ width: `${(completedCount / totalDays) * 100}%`, height: "100%", background: week.color, transition: "width 0.4s" }} />
             </div>
           </div>
 
-          {/* Week Nav */}
-          <div style={{ display: "flex", overflowX: "auto", gap: 8, padding: "16px 16px 0" }}>
-            {study.map((w, i) => (
-              <button key={i} onClick={() => { setActiveWeek(i); setExpandedSection(null); window.scrollTo(0,0); }}
-                style={{
-                  flexShrink: 0,
-                  background: activeWeek === i ? w.color : "transparent",
-                  border: `1px solid ${activeWeek === i ? w.color : "#3a2d20"}`,
-                  borderRadius: 8,
-                  padding: "8px 14px",
-                  cursor: "pointer",
-                  position: "relative",
-                }}>
-                <div style={{ fontSize: 10, color: activeWeek === i ? "rgba(255,255,255,0.7)" : "#6a5a48", letterSpacing: "0.1em" }}>WEEK</div>
-                <div style={{ fontSize: 16, fontWeight: "bold", color: activeWeek === i ? "#fff" : "#8a7060" }}>{i + 1}</div>
-                {completedWeeks.includes(i) && (
-                  <div style={{ position: "absolute", top: 4, right: 6, fontSize: 9, color: "#7fc87f" }}>✓</div>
-                )}
-              </button>
-            ))}
+          {/* Week Tabs */}
+          <div style={{ display: "flex", overflowX: "auto", gap: 6, padding: "12px 14px 0" }}>
+            {study.map((w, wi) => {
+              const wComplete = w.days.every((_, di) => isDayComplete(wi, di));
+              return (
+                <button key={wi} onClick={() => { setActiveWeek(wi); setActiveDay(0); window.scrollTo(0,0); }}
+                  style={{ flexShrink: 0, background: activeWeek === wi ? w.color : "transparent", border: `1px solid ${activeWeek === wi ? w.color : "#3a2d20"}`, borderRadius: 8, padding: "6px 12px", cursor: "pointer", position: "relative" }}>
+                  <div style={{ fontSize: 9, color: activeWeek === wi ? "rgba(255,255,255,0.65)" : "#6a5a48", letterSpacing: "0.1em" }}>WK</div>
+                  <div style={{ fontSize: 15, fontWeight: "bold", color: activeWeek === wi ? "#fff" : "#8a7060" }}>{wi + 1}</div>
+                  {wComplete && <div style={{ position: "absolute", top: 3, right: 5, fontSize: 8, color: "#7fc87f" }}>✓</div>}
+                </button>
+              );
+            })}
           </div>
 
-          <div style={{ padding: 16 }}>
-            {/* Week Header */}
-            <div style={{
-              background: `linear-gradient(135deg, ${week.color}22, ${week.color}0a)`,
-              border: `1px solid ${week.color}44`,
-              borderRadius: 12,
-              padding: "20px 20px 16px",
-              marginBottom: 12,
-            }}>
-              <div style={{ fontSize: 11, color: "#a08060", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>
-                Week {week.week} · {week.theme}
+          {/* Day Tabs */}
+          <div style={{ display: "flex", gap: 5, padding: "10px 14px 0", overflowX: "auto" }}>
+            {week.days.map((d, di) => {
+              const done = isDayComplete(activeWeek, di);
+              const active = activeDay === di;
+              return (
+                <button key={di} onClick={() => { setActiveDay(di); window.scrollTo(0,0); }}
+                  style={{ flexShrink: 0, background: active ? `${week.color}cc` : done ? `${week.color}33` : "#1e1812", border: `1px solid ${active ? week.color : done ? week.color + "55" : "#2e2418"}`, borderRadius: 20, padding: "5px 12px", cursor: "pointer", fontSize: 12, color: active ? "#fff" : done ? "#a0c890" : "#6a5a48", display: "flex", alignItems: "center", gap: 5 }}>
+                  {done && !active && <span style={{ fontSize: 9 }}>✓</span>}
+                  Day {di + 1}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Day Content */}
+          <div style={{ padding: "14px 16px 28px" }}>
+            {/* Day Header */}
+            <div style={{ background: `linear-gradient(135deg, ${week.color}20, ${week.color}08)`, border: `1px solid ${week.color}40`, borderRadius: 12, padding: "18px 18px 14px", marginBottom: 14 }}>
+              <div style={{ fontSize: 10, color: "#a08060", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 3 }}>
+                Week {activeWeek + 1} · Day {activeDay + 1} · {day.label}
               </div>
-              <h2 style={{ fontSize: 20, color: "#f0e4d0", margin: "0 0 12px", lineHeight: 1.3, fontWeight: "normal" }}>
-                {week.icon} {week.title}
-              </h2>
-              <p style={{ fontSize: 15, color: "#c0a888", lineHeight: 1.75, margin: 0 }}>{week.intro}</p>
+              <div style={{ fontSize: 18, color: "#f0e4d0", marginBottom: 10, lineHeight: 1.3 }}>
+                {week.icon} {day.focus}
+              </div>
+              <p style={{ fontSize: 15, color: "#c0a888", lineHeight: 1.75, margin: 0 }}>{day.content}</p>
             </div>
 
             {/* Scripture */}
-            <div style={{ marginBottom: 10 }}>
-              <SectionBtn id="scripture" emoji="📖" label="This Week's Scripture" />
-              {expandedSection === "scripture" && (
-                <div style={{ background: "#1e1610", border: `1px solid ${week.color}33`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "4px 16px 16px" }}>
-                  {week.scriptures.map((s, i) => (
-                    <div key={i} style={{ borderLeft: `3px solid ${week.color}`, paddingLeft: 16, marginTop: 16 }}>
-                      <div style={{ fontSize: 12, color: "#a08060", letterSpacing: "0.1em", marginBottom: 6, textTransform: "uppercase" }}>{s.ref}</div>
-                      <div style={{ fontSize: 15, color: "#e0d0b8", lineHeight: 1.8, fontStyle: "italic", marginBottom: 8 }}>"{s.text}"</div>
-                      <div style={{ fontSize: 13, color: "#9a8060" }}>→ {s.note}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            {day.scripture && (
+              <div style={{ background: "#1e1610", border: `1px solid ${week.color}33`, borderLeft: `3px solid ${week.color}`, borderRadius: "0 10px 10px 0", padding: "14px 16px", marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: "#a08060", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>{day.scripture.ref}</div>
+                <div style={{ fontSize: 15, color: "#e0d0b8", lineHeight: 1.85, fontStyle: "italic", marginBottom: 8 }}>"{day.scripture.text}"</div>
+                {day.note && <div style={{ fontSize: 13, color: "#9a8060" }}>→ {day.note}</div>}
+              </div>
+            )}
 
-            {/* Questions */}
-            <div style={{ marginBottom: 10 }}>
-              <SectionBtn id="questions" emoji="💭" label="Reflection Questions" />
-              {expandedSection === "questions" && (
-                <div style={{ background: "#1e1610", border: `1px solid ${week.color}33`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "4px 16px 16px" }}>
-                  {week.questions.map((q, i) => (
-                    <div key={i} style={{ display: "flex", gap: 12, marginTop: 16, paddingBottom: 16, borderBottom: i < week.questions.length - 1 ? "1px solid #2a2018" : "none" }}>
-                      <div style={{ flexShrink: 0, width: 24, height: 24, background: `${week.color}33`, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: week.color, marginTop: 2 }}>{i + 1}</div>
-                      <div style={{ fontSize: 15, color: "#c8b898", lineHeight: 1.7 }}>{q}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Task */}
+            {day.task && (
+              <div style={{ background: `${week.color}15`, border: `1px solid ${week.color}30`, borderRadius: 10, padding: "14px 16px", marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: week.color, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>Today's Practice</div>
+                <div style={{ fontSize: 15, color: "#d0c0a0", lineHeight: 1.75 }}>{day.task}</div>
+              </div>
+            )}
 
             {/* Prayer */}
-            <div style={{ marginBottom: 10 }}>
-              <SectionBtn id="prayer" emoji="🙏" label="Prayer for the Week" />
-              {expandedSection === "prayer" && (
-                <div style={{ background: "#1e1610", border: `1px solid ${week.color}33`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "16px" }}>
-                  <p style={{ fontSize: 16, color: "#d8c8a8", lineHeight: 1.9, fontStyle: "italic", margin: 0 }}>{week.prayer}</p>
-                </div>
-              )}
-            </div>
+            {day.prayer && (
+              <div style={{ background: "#1e1610", border: `1px solid ${week.color}33`, borderRadius: 10, padding: "16px", marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: "#a08060", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>🙏 Prayer</div>
+                <p style={{ fontSize: 15, color: "#d8c8a8", lineHeight: 1.9, fontStyle: "italic", margin: 0 }}>{day.prayer}</p>
+              </div>
+            )}
 
-            {/* Practice */}
-            <div style={{ marginBottom: 20 }}>
-              <SectionBtn id="practice" emoji="📝" label="This Week's Practice" />
-              {expandedSection === "practice" && (
-                <div style={{ background: "#1e1610", border: `1px solid ${week.color}33`, borderTop: "none", borderRadius: "0 0 10px 10px", padding: "16px" }}>
-                  <div style={{ background: `${week.color}18`, borderRadius: 8, padding: "14px 16px", fontSize: 15, color: "#d0c0a0", lineHeight: 1.8 }}>{week.practice}</div>
-                </div>
-              )}
-            </div>
+            {/* Questions */}
+            {day.questions && (
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: "#a08060", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>💭 Reflection Questions</div>
+                {day.questions.map((q, qi) => (
+                  <div key={qi} style={{ marginBottom: 16 }}>
+                    <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                      <div style={{ flexShrink: 0, width: 22, height: 22, background: `${week.color}33`, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: week.color, marginTop: 2 }}>{qi + 1}</div>
+                      <div style={{ fontSize: 15, color: "#c8b898", lineHeight: 1.7 }}>{q}</div>
+                    </div>
+                    <textarea
+                      value={getAnswer(qi)}
+                      onChange={e => saveAnswer(qi, e.target.value)}
+                      placeholder="Write your thoughts here... (auto-saved)"
+                      rows={4}
+                      style={{
+                        width: "100%",
+                        background: "#211810",
+                        border: `1px solid ${getAnswer(qi) ? week.color + "55" : "#3a2d20"}`,
+                        borderRadius: 8,
+                        padding: "12px 14px",
+                        fontSize: 14,
+                        color: "#d0c0a0",
+                        lineHeight: 1.7,
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Complete Button */}
-            <button onClick={markComplete} style={{
-              width: "100%",
-              background: completedWeeks.includes(activeWeek) ? `${week.color}55` : week.color,
-              border: `1px solid ${week.color}`,
-              borderRadius: 10,
-              padding: "15px",
-              fontSize: 15,
-              color: "#fff",
-              letterSpacing: "0.04em",
-            }}>
-              {completedWeeks.includes(activeWeek)
-                ? "✓ Complete · Go to Next Week →"
+            <button onClick={markDayComplete}
+              style={{
+                width: "100%",
+                background: isDayComplete(activeWeek, activeDay) ? `${week.color}55` : week.color,
+                border: `1px solid ${week.color}`,
+                borderRadius: 10,
+                padding: "14px",
+                fontSize: 15,
+                color: "#fff",
+                letterSpacing: "0.04em",
+              }}>
+              {isDayComplete(activeWeek, activeDay)
+                ? "✓ Day Complete"
+                : activeDay < week.days.length - 1
+                ? `Complete Day ${activeDay + 1} → Day ${activeDay + 2}`
                 : activeWeek < study.length - 1
-                ? "Mark Week Complete & Continue →"
+                ? `Complete Week ${activeWeek + 1} → Week ${activeWeek + 2}`
                 : "✓ Complete the Study"}
             </button>
 
-            {/* Progress */}
-            <div style={{ textAlign: "center", marginTop: 16, marginBottom: 8 }}>
-              <div style={{ fontSize: 12, color: "#6a5a48", marginBottom: 6 }}>{completedWeeks.length} of {study.length} weeks completed</div>
-              <div style={{ background: "#2a2018", borderRadius: 4, height: 4, overflow: "hidden" }}>
-                <div style={{ width: `${(completedWeeks.length / study.length) * 100}%`, height: "100%", background: week.color, transition: "width 0.4s ease" }} />
-              </div>
-            </div>
-
-            <div style={{ textAlign: "center", fontSize: 13, color: "#4a3a28", fontStyle: "italic", paddingTop: 12, paddingBottom: 28, lineHeight: 1.7 }}>
+            <div style={{ textAlign: "center", fontSize: 12, color: "#4a3a28", fontStyle: "italic", paddingTop: 20, lineHeight: 1.7 }}>
               "Though I have fallen, I will rise." — Micah 7:8
             </div>
           </div>
